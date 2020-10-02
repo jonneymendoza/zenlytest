@@ -35,8 +35,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/counterList"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
         android:layout_marginTop="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

@@ -5,16 +5,18 @@ import android.animation.ValueAnimator
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.animation.AccelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val counterAdapter = CounterAdapter()
+    private lateinit var counterAdapter: CounterAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,16 +33,30 @@ class MainActivity : AppCompatActivity() {
      *
      */
     private fun setupCounterView() {
+        counterAdapter = CounterAdapter(this)
         counterList.apply {
             adapter = counterAdapter
-//            setHasFixedSize(true)
+            setHasFixedSize(true)
             layoutManager = LinearLayoutManager(this@MainActivity)
+            addOnItemTouchListener(object : RecyclerView.OnItemTouchListener{
+                override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
+                }
+
+                override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                    return true
+                }
+
+                override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+                }
+
+            })
         }
 
         counterButton.setOnClickListener {
             if (isValidNumber(enterValue.text.toString())) {
-                Log.d("JJJ", "value = " + (enterValue.text.toString().toInt() - CounterAdapter.COUNTER_OFFSET))
-                counterList.smoothScrollToPosition(enterValue.text.toString().toInt() - CounterAdapter.COUNTER_OFFSET)
+                counterList.smoothScrollToPosition(
+                    enterValue.text.toString().toInt() - CounterAdapter.COUNTER_OFFSET
+                )
             }
         }
     }
