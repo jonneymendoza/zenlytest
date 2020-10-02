@@ -4,20 +4,69 @@ import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.animation.AccelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
+
+    private val counterAdapter = CounterAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         setGradientAnimation()
+
+        setupCounterView()
     }
 
+    /**
+     * Task 3:
+     *
+     *
+     */
+    private fun setupCounterView() {
+        counterList.apply {
+            adapter = counterAdapter
+//            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(this@MainActivity)
+        }
+
+        counterButton.setOnClickListener {
+            if (isValidNumber(enterValue.text.toString())) {
+                Log.d("JJJ", "value = " + (enterValue.text.toString().toInt() - CounterAdapter.COUNTER_OFFSET))
+                counterList.smoothScrollToPosition(enterValue.text.toString().toInt() - CounterAdapter.COUNTER_OFFSET)
+            }
+        }
+    }
+
+    private fun isValidNumber(counterText: String): Boolean {
+        try {
+            val counter: Int = counterText.toInt()
+
+            if (counter < CounterAdapter.COUNTER_MAX) {
+                return true
+            }
+        } catch (exception: NumberFormatException) {
+            return false
+        }
+        return false
+    }
+
+    /**
+     * Task 2:
+     *
+     *  Consider a GradientDrawable (let’s call it gd) displaying a red to blue vertical
+    gradient. Write some code to animate gd so that it smoothly animates from its current
+    state to a green to yellow vertical gradient. In order to animate the gradient you can
+    either use a 2-seconds fixed timing or synchronise it to a ViewPager page scrolling
+    event (using positionOffset from onPageScrolled).
+     */
     private fun setGradientAnimation() {
         var startColor = 0
         var endColor = 0
